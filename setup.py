@@ -27,6 +27,8 @@ long_description=(
         + '\n' +
         read('src', 'zc', 'lockfile', 'README.txt')
         + '\n' +
+        read('src', 'zc', 'lockfile', 'CHANGES.txt')
+        + '\n' +
         'Download\n'
         '**********************\n'
         )

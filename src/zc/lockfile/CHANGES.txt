@@ -1,0 +1,12 @@
+Change History
+***************
+
+1.0.0 (2008-10-18)
+====================
+
+- Fixed a small bug in error logging.
+
+1.0.0b1 (2007-07-18)
+====================
+
+Initial release
