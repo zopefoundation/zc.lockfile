@@ -12,7 +12,7 @@
 #
 ##############################################################################
 import os, sys, unittest
-from zope.testing import doctest
+from zope.testing import doctest, setupstack
 
 import zc.lockfile, time, threading
     
@@ -53,6 +53,9 @@ def many_threads_read_and_write():
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(doctest.DocFileSuite('README.txt'))
-    suite.addTest(doctest.DocTestSuite())
+    suite.addTest(doctest.DocFileSuite(
+        'README.txt',
+        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
+    suite.addTest(doctest.DocTestSuite(
+        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
     return suite

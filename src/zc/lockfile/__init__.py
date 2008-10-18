@@ -15,7 +15,7 @@
 import os
 import errno
 import logging
-logger = logging.getLogger("ZODB.lock_file")
+logger = logging.getLogger("zc.lockfile")
 
 class LockError(Exception):
     """Couldn't get a lock
@@ -78,7 +78,9 @@ class LockFile:
             fp.seek(1)
             pid = fp.read().strip()[:20]
             fp.close()
-            logger.exception("Error locking file", path, pid)
+            if not pid:
+                pid = 'UNKNOWN'
+            logger.exception("Error locking file %s; pid=%s", path, pid)
             raise
 
         self._fp = fp

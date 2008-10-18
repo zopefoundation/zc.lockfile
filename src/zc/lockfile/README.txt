@@ -11,11 +11,17 @@ LockFile object with a file name:
 
 If we try to lock the same name, we'll get a lock error:
 
+    >>> import zope.testing.loggingsupport
+    >>> handler = zope.testing.loggingsupport.InstalledHandler('zc.lockfile')
     >>> try:
     ...     zc.lockfile.LockFile('lock')
     ... except zc.lockfile.LockError:
-    ...     print "Can't lock"
-    Can't lock
+    ...     print "Can't lock file"
+    Can't lock file
+
+    >>> for record in handler.records:
+    ...     print record.levelname, record.getMessage()
+    ERROR Error locking file lock; pid=UNKNOWN
 
 To release the lock, use it's close method:
 
@@ -31,3 +37,9 @@ Of course, now that we've released the lock, we can created it again:
 
     >>> lock = zc.lockfile.LockFile('lock')
     >>> lock.close()
+
+.. Cleanup
+
+    >>> import os
+    >>> os.remove('lock')
+
