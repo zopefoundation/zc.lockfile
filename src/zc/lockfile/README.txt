@@ -33,7 +33,7 @@ The lock file is not removed.  It is left behind:
     >>> os.path.exists('lock')
     True
 
-Of course, now that we've released the lock, we can created it again:
+Of course, now that we've released the lock, we can create it again:
 
     >>> lock = zc.lockfile.LockFile('lock')
     >>> lock.close()
