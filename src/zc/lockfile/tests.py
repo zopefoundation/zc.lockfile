@@ -11,11 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-import os, sys, unittest
-from zope.testing import doctest, setupstack
-
+from zope.testing import setupstack
+import os, sys, unittest, doctest
 import zc.lockfile, time, threading
-    
+
 
 def inc():
     while 1:

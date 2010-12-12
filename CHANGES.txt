@@ -6,6 +6,9 @@ Change History
 
 - Added test extra to declare test dependency on ``zope.testing``.
 
+- Using Python's ``doctest`` module instead of depreacted
+  ``zope.testing.doctest``.
+
 
 1.0.0 (2008-10-18)
 ==================
