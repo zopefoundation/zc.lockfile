@@ -27,7 +27,7 @@ long_description=(
         + '\n' +
         read('src', 'zc', 'lockfile', 'README.txt')
         + '\n' +
-        read('src', 'zc', 'lockfile', 'CHANGES.txt')
+        read('CHANGES.txt')
         + '\n' +
         'Download\n'
         '**********************\n'
@@ -49,6 +49,10 @@ setup(
     package_dir = {'': 'src'},
     namespace_packages = ['zc'],
     install_requires = 'setuptools',
+    extras_require=dict(
+        test=[
+            'zope.testing',
+            ]),
     include_package_data = True,
     zip_safe=False,
     classifiers = [

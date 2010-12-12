@@ -1,8 +1,14 @@
 Change History
 ***************
 
+1.0.1 (unreleased)
+==================
+
+- Added test extra to declare test dependency on ``zope.testing``.
+
+
 1.0.0 (2008-10-18)
-====================
+==================
 
 - Fixed a small bug in error logging.
 
