@@ -5,7 +5,7 @@ Change History
 ==================
 
 - Fixed: when there was lock contention, the pid in the lock file was
-  lost.'
+  lost.
 
   Thanks to Daniel Moisset reporting the problem and providing a fix
   with tests.
