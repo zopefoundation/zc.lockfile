@@ -50,6 +50,24 @@ def many_threads_read_and_write():
     >>> os.remove('f.lock')
     """
 
+def pid_in_lockfile():
+    r"""
+    >>> import os, zc.lockfile
+    >>> pid = os.getpid()
+    >>> lock = zc.lockfile.LockFile("f.lock")
+    >>> open("f.lock").read().strip() == str(pid)
+    True
+
+    Make sure that locking twice does not overwrite the old pid:
+    
+    >>> lock = zc.lockfile.LockFile("f.lock")
+    Traceback (most recent call last):
+      ...
+    LockError: Couldn't lock 'f.lock'
+    >>> open("f.lock").read().strip() == str(pid)
+    True
+    """
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocFileSuite(

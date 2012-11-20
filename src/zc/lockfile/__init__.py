@@ -72,7 +72,7 @@ class LockFile:
         self._path = path
         # XXX this overwrites the pid info.  Should probably be r+.
         # Need a test.
-        fp = open(path, 'w+')
+        fp = open(path, 'a+')
 
         try:
             _lock_file(fp)
