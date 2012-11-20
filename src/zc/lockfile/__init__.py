@@ -70,6 +70,8 @@ class LockFile:
 
     def __init__(self, path):
         self._path = path
+        # XXX this overwrites the pid info.  Should probably be r+.
+        # Need a test.
         fp = open(path, 'w+')
 
         try:
