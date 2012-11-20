@@ -57,7 +57,6 @@ setup(
     zip_safe=False,
     classifiers = [
         'Programming Language :: Python',
-        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
         'Operating System :: POSIX',
