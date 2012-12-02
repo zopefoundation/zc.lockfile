@@ -47,7 +47,7 @@ except ImportError:
                 msvcrt.locking(file.fileno(), msvcrt.LK_UNLCK, 1)
             except IOError:
                 raise LockError("Couldn't unlock %r" % file.name)
-                
+
 else:
     # Unix
     _flags = fcntl.LOCK_EX | fcntl.LOCK_NB
@@ -57,7 +57,7 @@ else:
             fcntl.flock(file.fileno(), _flags)
         except IOError:
             raise LockError("Couldn't lock %r" % file.name)
-            
+
 
     def _unlock_file(file):
         # File is automatically unlocked on close
@@ -70,9 +70,15 @@ class LockFile:
 
     def __init__(self, path):
         self._path = path
-        # XXX this overwrites the pid info.  Should probably be r+.
-        # Need a test.
-        fp = open(path, 'a+')
+        try:
+            # Try to open for writing without truncation:
+            fp = open(path, 'r+')
+        except IOError:
+            # If the file doesn't exist, we'll get an IO error, try a+
+            # Note that there may be a race here. Multiple processes
+            # could fail on the r+ open and open the file a+, but only
+            # one will get the the lock and write a pid.
+            fp = open(path, 'a+')
 
         try:
             _lock_file(fp)

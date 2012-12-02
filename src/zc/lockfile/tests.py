@@ -47,7 +47,15 @@ def many_threads_read_and_write():
     True
 
     >>> os.remove('f')
+
+    We should only have one pid in the lock file:
+
+    >>> f = open('f.lock')
+    >>> len(f.read().strip().split())
+    1
+
     >>> os.remove('f.lock')
+
     """
 
 def pid_in_lockfile():
@@ -55,17 +63,26 @@ def pid_in_lockfile():
     >>> import os, zc.lockfile
     >>> pid = os.getpid()
     >>> lock = zc.lockfile.LockFile("f.lock")
-    >>> open("f.lock").read().strip() == str(pid)
+    >>> f = open("f.lock")
+    >>> f.seek(1)
+    >>> f.read().strip() == str(pid)
     True
+    >>> f.close()
 
     Make sure that locking twice does not overwrite the old pid:
-    
+
     >>> lock = zc.lockfile.LockFile("f.lock")
     Traceback (most recent call last):
       ...
     LockError: Couldn't lock 'f.lock'
-    >>> open("f.lock").read().strip() == str(pid)
+
+    >>> f = open("f.lock")
+    >>> f.seek(1)
+    >>> f.read().strip() == str(pid)
     True
+    >>> f.close()
+
+    >>> lock.close()
     """
 
 def test_suite():

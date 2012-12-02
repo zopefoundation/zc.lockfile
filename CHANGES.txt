@@ -1,6 +1,12 @@
 Change History
 ***************
 
+1.0.2 (2012-12-02)
+==================
+
+- Fixed: the fix included in 1.0.1 caused multiple pids to be written
+  to the lock file
+
 1.0.1 (2012-11-30)
 ==================
 
