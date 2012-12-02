@@ -53,6 +53,7 @@ def many_threads_read_and_write():
     >>> f = open('f.lock')
     >>> len(f.read().strip().split())
     1
+    >>> f.close()
 
     >>> os.remove('f.lock')
 
