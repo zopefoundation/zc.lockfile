@@ -11,10 +11,15 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-from zope.testing import setupstack
-import os, sys, unittest, doctest
+import os, re, sys, unittest, doctest
 import zc.lockfile, time, threading
+from zope.testing import renormalizing, setupstack
 
+checker = renormalizing.RENormalizing([
+    # Python 3 adds module path to error class name.
+    (re.compile("zc\.lockfile\.LockError:"),
+     r"LockError:"),
+    ])
 
 def inc():
     while 1:
@@ -29,20 +34,23 @@ def inc():
     time.sleep(0.01)
     v += 1
     f.seek(0)
-    f.write('%d\n' % v)
+    f.write(('%d\n' % v).encode('ASCII'))
     f.close()
     lock.close()
 
 def many_threads_read_and_write():
     r"""
-    >>> open('f', 'w+b').write('0\n')
-    >>> open('f.lock', 'w+b').write('0\n')
+    >>> with open('f', 'w+b') as file:
+    ...     _ = file.write(b'0\n')
+    >>> with open('f.lock', 'w+b') as file:
+    ...     _ = file.write(b'0\n')
 
     >>> n = 50
     >>> threads = [threading.Thread(target=inc) for i in range(n)]
     >>> _ = [thread.start() for thread in threads]
     >>> _ = [thread.join() for thread in threads]
-    >>> saved = int(open('f', 'rb').readline().strip())
+    >>> with open('f', 'rb') as file:
+    ...     saved = int(file.read().strip())
     >>> saved == n
     True
 
@@ -65,7 +73,7 @@ def pid_in_lockfile():
     >>> pid = os.getpid()
     >>> lock = zc.lockfile.LockFile("f.lock")
     >>> f = open("f.lock")
-    >>> f.seek(1)
+    >>> _ = f.seek(1)
     >>> f.read().strip() == str(pid)
     True
     >>> f.close()
@@ -78,7 +86,7 @@ def pid_in_lockfile():
     LockError: Couldn't lock 'f.lock'
 
     >>> f = open("f.lock")
-    >>> f.seek(1)
+    >>> _ = f.seek(1)
     >>> f.read().strip() == str(pid)
     True
     >>> f.close()
@@ -89,8 +97,9 @@ def pid_in_lockfile():
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocFileSuite(
-        'README.txt',
+        'README.txt', checker=checker,
         setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
     suite.addTest(doctest.DocTestSuite(
-        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
+        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown,
+        checker=checker))
     return suite

@@ -11,8 +11,6 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-name, version = "zc.lockfile", '0'
-
 import os
 from setuptools import setup, find_packages
 
@@ -36,15 +34,15 @@ long_description=(
 open('doc.txt', 'w').write(long_description)
 
 setup(
-    name = name, version=version,
+    name = 'zc.lockfile',
+    version = '1.1.0dev0',
     author = "Jim Fulton",
     author_email = "jim@zope.com",
     description = "Basic inter-process locks",
     long_description=long_description,
     license = "ZPL 2.1",
     keywords = "lock",
-    url='http://www.python.org/pypi/'+name,
-
+    url='http://www.python.org/pypi/zc.lockfile',
     packages = find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages = ['zc'],
@@ -53,13 +51,27 @@ setup(
         test=[
             'zope.testing',
             ]),
-    include_package_data = True,
-    zip_safe=False,
     classifiers = [
-        'Programming Language :: Python',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
+        'Natural Language :: English',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Topic :: Software Development',
        ],
+    test_suite="zc.lockfile.tests.test_suite",
+    tests_require=[
+        'zope.testing'],
+    include_package_data = True,
+    zip_safe=False,
     )
