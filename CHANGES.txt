@@ -6,7 +6,6 @@ Change History
 
 - Nothing changed yet.
 
-
 1.1.0 (2013-02-12)
 ==================
 
@@ -16,13 +15,11 @@ Change History
 
 - Removed Python 2.4 and Python 2.5 support.
 
-
 1.0.2 (2012-12-02)
 ==================
 
 - Fixed: the fix included in 1.0.1 caused multiple pids to be written
   to the lock file
-
 
 1.0.1 (2012-11-30)
 ==================
@@ -38,7 +35,6 @@ Change History
 - Using Python's ``doctest`` module instead of depreacted
   ``zope.testing.doctest``.
 
-
 1.0.0 (2008-10-18)
 ==================
 
@@ -47,4 +43,4 @@ Change History
 1.0.0b1 (2007-07-18)
 ====================
 
-Initial release
+- Initial release
