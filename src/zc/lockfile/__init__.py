@@ -58,7 +58,6 @@ else:
         except IOError:
             raise LockError("Couldn't lock %r" % file.name)
 
-
     def _unlock_file(file):
         # File is automatically unlocked on close
         pass
