@@ -87,8 +87,7 @@ class LockFile:
             fp.close()
             if not pid:
                 pid = 'UNKNOWN'
-            logger.error("Error locking file %s; pid=%s", path, pid)
-            raise
+            raise LockError("Error locking file '%s'; pid=%s" % (path, pid))
 
         self._fp = fp
         fp.write(" %s\n" % os.getpid())
