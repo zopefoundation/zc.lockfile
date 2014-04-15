@@ -67,7 +67,7 @@ class LockFile:
 
     _fp = None
 
-    def __init__(self, path):
+    def __init__(self, path, log_exc=False):
         self._path = path
         try:
             # Try to open for writing without truncation:
@@ -87,7 +87,8 @@ class LockFile:
             fp.close()
             if not pid:
                 pid = 'UNKNOWN'
-            logger.exception("Error locking file %s; pid=%s", path, pid)
+            if log_exc:
+                logger.exception("Error locking file %s; pid=%s", path, pid)
             raise
 
         self._fp = fp
