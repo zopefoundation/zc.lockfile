@@ -7,7 +7,7 @@ Change History
 - Code and ReST markup cosmetics.
   [alecghica]
 
-- Added Jython support.
+- Added Python 3.4 and Jython 2.7 support.
 
 1.1.0 (2013-02-12)
 ==================
