@@ -67,6 +67,7 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
+        'Programming Language :: Python :: Implementation :: Jython',
         'Topic :: Software Development',
        ],
     test_suite="zc.lockfile.tests.test_suite",

@@ -27,10 +27,49 @@ except ImportError:
     try:
         import msvcrt
     except ImportError:
-        def _lock_file(file):
-            raise TypeError('No file-locking support on this platform')
-        def _unlock_file(file):
-            raise TypeError('No file-locking support on this platform')
+        try:
+            import java.lang.Exception
+            import threading
+            import os.path
+        except ImportError:
+            def _lock_file(file):
+                raise TypeError('No file-locking support on this platform')
+            def _unlock_file(file):
+                raise TypeError('No file-locking support on this platform')
+        else:
+            # Jython Java file locks are per-VM, so they can't be used
+            # to exclude threads. We have to take extra steps to be
+            # sure that only one thread actually gets a lock to match
+            # the semantics of the other implementations.
+            _locks = {}
+            _locks_lock = threading.Lock()
+
+            def _lock_file(file):
+                name = os.path.abspath(file.name)
+                with _locks_lock:
+                    lock = _locks.get(name)
+                    if lock is not None and lock.isValid():
+                        raise LockError("Couldn't lock %r" % file.name)
+
+                    try:
+                        # Non-blocking try to acquire the lock
+                        lock = file.fileno().getChannel().tryLock()
+                    except java.lang.Exception:
+                        lock = None
+
+                    if lock is None:
+                        raise LockError("Couldn't lock %r" % file.name)
+
+                    _locks[name] = lock
+
+            def _unlock_file(file):
+                name = os.path.abspath(file.name)
+                with _locks_lock:
+                    try:
+                        _locks[name].release()
+                        del _locks[name]
+                    except KeyError:
+                        pass
 
     else:
         # Windows
