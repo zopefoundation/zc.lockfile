@@ -14,7 +14,17 @@
 import os, re, sys, unittest, doctest
 import zc.lockfile, time, threading
 from zope.testing import renormalizing, setupstack
-from contextlib import contextmanager, nested
+from contextlib import contextmanager
+try:
+    from contextlib import nested
+except ImportError:
+    from contextlib import ExitStack
+
+    @contextmanager
+    def nested(*args):
+        with ExitStack() as stack:
+            yield tuple(stack.enter_context(cm) for cm in args)
+
 import tempfile
 
 checker = renormalizing.RENormalizing([
