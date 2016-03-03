@@ -7,6 +7,8 @@ Change History
 - Code and ReST markup cosmetics.
   [alecghica]
 
+- Added the ability to include the hostname in the lock file content.
+
 1.1.0 (2013-02-12)
 ==================
 

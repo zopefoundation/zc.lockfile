@@ -1,3 +1,21 @@
+*************************
+Basic inter-process locks
+*************************
+
+The zc.lockfile package provides a basic portable implementation of
+interprocess locks using lock files.  The purpose if not specifically
+to lock files, but to simply provide locks with an implementation
+based on file-locking primitives.  Of course, these locks could be
+used to mediate access to *other* files.  For example, the ZODB file
+storage implementation uses file locks to mediate access to
+file-storage database files.  The database files and lock file files
+are separate files.
+
+.. contents::
+
+Detailed Documentation
+**********************
+
 Lock file support
 =================
 
@@ -67,3 +85,56 @@ If you now inspected the lock file, you would see e.g.:
     $ cat lock
      123;myhostname
 
+
+Change History
+***************
+
+1.1.1 (unreleased)
+==================
+
+- Code and ReST markup cosmetics.
+  [alecghica]
+
+- Added the ability to include the hostname in the lock file content.
+
+1.1.0 (2013-02-12)
+==================
+
+- Added Trove classifiers and made setup.py zest.releaser friendly.
+
+- Added Python 3.2, 3.3 and PyPy 1.9 support.
+
+- Removed Python 2.4 and Python 2.5 support.
+
+1.0.2 (2012-12-02)
+==================
+
+- Fixed: the fix included in 1.0.1 caused multiple pids to be written
+  to the lock file
+
+1.0.1 (2012-11-30)
+==================
+
+- Fixed: when there was lock contention, the pid in the lock file was
+  lost.
+
+  Thanks to Daniel Moisset reporting the problem and providing a fix
+  with tests.
+
+- Added test extra to declare test dependency on ``zope.testing``.
+
+- Using Python's ``doctest`` module instead of depreacted
+  ``zope.testing.doctest``.
+
+1.0.0 (2008-10-18)
+==================
+
+- Fixed a small bug in error logging.
+
+1.0.0b1 (2007-07-18)
+====================
+
+- Initial release
+
+Download
+**********************
