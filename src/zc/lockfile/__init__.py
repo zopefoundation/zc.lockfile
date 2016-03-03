@@ -135,7 +135,7 @@ class LockFile:
             if match:
                 values_str = ' '.join(
                     '{0}={1}'.format(name, value[:20])
-                    for name, value in match.groupdict().items())
+                    for name, value in sorted(match.groupdict().items()))
             else:
                 # lock file doesn't match the given format; just log what
                 # zc.lockfile originally did in similar situations
