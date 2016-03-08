@@ -15,16 +15,6 @@ import os, re, sys, unittest, doctest
 import zc.lockfile, time, threading
 from zope.testing import renormalizing, setupstack
 from contextlib import contextmanager
-try:
-    from contextlib import nested
-except ImportError:
-    from contextlib import ExitStack
-
-    @contextmanager
-    def nested(*args):
-        with ExitStack() as stack:
-            yield tuple(stack.enter_context(cm) for cm in args)
-
 import tempfile
 
 checker = renormalizing.RENormalizing([
@@ -180,11 +170,11 @@ class LockFileContentFormatterTestCase(unittest.TestCase):
     """Tests for the LockFileContentFormatter string formatter class"""
     def test_lock_file_content_formatter(self):
         """{pid} and {hostname} become os.getpid() and socket.gethostname()"""
-        with nested(patch_module('os', os_socket_mock),
-                    patch_module('socket', os_socket_mock)):
-            formatter = zc.lockfile.LockFileContentFormatter()
-            result = formatter.format('pid={pid} hostname={hostname}')
-            assert result == 'pid=123 hostname=myhostname', repr(result)
+        with patch_module('os', os_socket_mock):
+            with patch_module('socket', os_socket_mock):
+                formatter = zc.lockfile.LockFileContentFormatter()
+                result = formatter.format('pid={pid} hostname={hostname}')
+                assert result == 'pid=123 hostname=myhostname', repr(result)
 
 
 class LockFileParserFormatterTestCase(unittest.TestCase):
@@ -233,21 +223,21 @@ class LockFileLogEntryTestCase(unittest.TestCase):
             if lock is not None:
                 lock.close()
 
-        with nested(patch_module('os', os_socket_mock),
-                    patch_module('socket', os_socket_mock),
-                    patch_object(zc.lockfile, 'logger', test_logger)):
-            first_locked = threading.Event()
-            second_locked = threading.Event()
-            thread1 = threading.Thread(target=lock,
-                                       args=(first_locked, second_locked))
-            thread2 = threading.Thread(target=lock,
-                                       args=(second_locked, second_locked))
-            thread1.start()
-            first_locked.wait()
-            assert not test_logger.log_entries
-            thread2.start()
-            thread1.join()
-            thread2.join()
+        with patch_module('os', os_socket_mock):
+            with patch_module('socket', os_socket_mock):
+                with patch_object(zc.lockfile, 'logger', test_logger):
+                    first_locked = threading.Event()
+                    second_locked = threading.Event()
+                    thread1 = threading.Thread(
+                        target=lock, args=(first_locked, second_locked))
+                    thread2 = threading.Thread(
+                        target=lock, args=(second_locked, second_locked))
+                    thread1.start()
+                    first_locked.wait()
+                    assert not test_logger.log_entries
+                    thread2.start()
+                    thread1.join()
+                    thread2.join()
         expected = [('Error locking file %s; %s',
                      'f.lock',
                      'hostname=myhostname pid=123')]
