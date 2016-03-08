@@ -105,7 +105,7 @@ class LockFileParserFormatter(string.Formatter):
             yield re.escape(literal_text), field_name, format_spec, None
 
     def get_value(self, key, args, kwargs):
-        return r'(?P<{}>[a-zA-Z0-9.?-]+)'.format(key)
+        return r'(?P<{0}>[a-zA-Z0-9.?-]+)'.format(key)
 
 
 class LockFile:
