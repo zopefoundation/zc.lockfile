@@ -33,6 +33,10 @@ class OsSocketMock(object):
     def gethostname(self):
         return 'myhostname'
 
+    def device_encoding(self, fd):
+        """In PyPy3, os.device_encoding() is called when acquiring a lock"""
+        return None
+
 os_socket_mock = OsSocketMock()
 
 
