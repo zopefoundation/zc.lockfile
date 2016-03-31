@@ -13,8 +13,6 @@
 ##############################################################################
 
 import os
-import re
-import string
 import errno
 import logging
 logger = logging.getLogger("zc.lockfile")
@@ -65,47 +63,11 @@ else:
         pass
 
 
-class LockFileContentFormatter(string.Formatter):
-    """Replace {pid} with os.getpid(), {hostname} with socket.gethostname()
-
-    E.g. if you call ``LockFileContentFormatter().format('{pid};{hostname}')``,
-    you get back something like ``'123;myhostname'``.
-
-    Only imports the ``socket`` standard library module when actually needed for
-    maximum backwards compatibility.
-
-    If any exception occurs, uses the string ``'UNKNOWN'`` for the pid and/or
-    hostname.
-
-    """
-    def get_value(self, key, args, kwargs):
-        try:
-            if key == 'pid':
-                return os.getpid()
-            elif key == 'hostname':
-                import socket
-                return socket.gethostname()
-            else:
-                return super(LockFileContentFormatter, self).get_value(
-                    key, args, kwargs)
-        except Exception:
-            return 'UNKNOWN'
-
-
-class LockFileParserFormatter(string.Formatter):
-    r"""Replace fields with named regex groups and escape other text
-
-    >>> LockFileParserFormatter().format('.{field}?')
-    '\\.(?P<field>[a-zA-Z0-9.?-]+)\\?'
-
-    """
-    def parse(self, format_string):
-        parsed = super(LockFileParserFormatter, self).parse(format_string)
-        for literal_text, field_name, format_spec, conversion in parsed:
-            yield re.escape(literal_text), field_name, format_spec, None
-
-    def get_value(self, key, args, kwargs):
-        return r'(?P<{0}>[a-zA-Z0-9.?-]+)'.format(key)
+class LazyHostName(object):
+    """Avoid importing socket and calling gethostname() unnecessarily"""
+    def __str__(self):
+        import socket
+        return socket.gethostname()
 
 
 class LockFile:
@@ -129,25 +91,23 @@ class LockFile:
         except:
             fp.seek(1)
             content = fp.read().strip()
-            # parse pid and/or hostname from the lock file
-            parse_template = LockFileParserFormatter().format(content_template)
-            match = re.search(parse_template, content)
-            if match:
-                values_str = ' '.join(
-                    '{0}={1}'.format(name, value[:20])
-                    for name, value in sorted(match.groupdict().items()))
-            else:
-                # lock file doesn't match the given format; just log what
-                # zc.lockfile originally did in similar situations
-                values_str = 'pid=UNKNOWN'
             fp.close()
-            logger.exception("Error locking file %s; %s", path, values_str)
+            if content_template == '{pid}':
+                # Original exception message format when using the default
+                # lock file template
+                pid = content[:20] if content else 'UNKNOWN'
+                logger.exception("Error locking file %s; pid=%s", path, pid)
+            else:
+                # Include the first 40 characters of lock file contents for
+                # custom lock file templates
+                logger.exception('Error locking file %s; content: "%s%s"',
+                                 path, content[:40],
+                                 '...' if len(content) > 40 else '')
             raise
 
-        # write pid and/or hostname into the lock file
-        content = LockFileContentFormatter().format(content_template)
         self._fp = fp
-        fp.write(" %s\n" % content)
+        fp.write(" %s\n" % content_template.format(pid=os.getpid(),
+                                                   hostname=LazyHostName()))
         fp.truncate()
         fp.flush()
 

@@ -131,28 +131,6 @@ def hostname_in_lockfile():
     """
 
 
-class LockFileContentFormatterTestCase(unittest.TestCase):
-    """Tests for the LockFileContentFormatter string formatter class"""
-    def test_lock_file_content_formatter(self):
-        """{pid} and {hostname} become os.getpid() and socket.gethostname()"""
-        with patch('os.getpid', Mock(return_value=123)):
-            with patch('socket.gethostname', Mock(return_value='myhostname')):
-                formatter = zc.lockfile.LockFileContentFormatter()
-                result = formatter.format('pid={pid} hostname={hostname}')
-                assert result == 'pid=123 hostname=myhostname', repr(result)
-
-
-class LockFileParserFormatterTestCase(unittest.TestCase):
-    """Tests for the LockFileParserFormatter string formatter class"""
-    def test_lock_file_parser_formatter(self):
-        """Fields become named regex groups, everything else is escaped"""
-        formatter = zc.lockfile.LockFileParserFormatter()
-        parsed = formatter.format(' {bam}.{foo!r}bar{baz} ')
-        assert parsed == (r'\ (?P<bam>[a-zA-Z0-9.?-]+)'
-                          r'\.(?P<foo>[a-zA-Z0-9.?-]+)'
-                          r'bar(?P<baz>[a-zA-Z0-9.?-]+)\ '), repr(parsed)
-
-
 class TestLogger(object):
     def __init__(self):
         self.log_entries = []
@@ -203,9 +181,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
                     thread2.start()
                     thread1.join()
                     thread2.join()
-        expected = [('Error locking file %s; %s',
-                     'f.lock',
-                     'hostname=myhostname pid=123')]
+        expected = [('Error locking file %s; content: "%s%s"',
+                     'f.lock', '123/myhostname', '')]
         assert test_logger.log_entries == expected, test_logger.log_entries
 
 
