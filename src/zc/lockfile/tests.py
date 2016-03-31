@@ -16,55 +16,16 @@ import zc.lockfile, time, threading
 from zope.testing import renormalizing, setupstack
 from contextlib import contextmanager
 import tempfile
+try:
+    from unittest.mock import Mock, patch
+except ImportError:
+    from mock import Mock, patch
 
 checker = renormalizing.RENormalizing([
     # Python 3 adds module path to error class name.
     (re.compile("zc\.lockfile\.LockError:"),
      r"LockError:"),
     ])
-
-
-class OsSocketMock(object):
-    """Mock object for the os and socket standard library modules"""
-
-    def getpid(self):
-        return 123
-
-    def gethostname(self):
-        return 'myhostname'
-
-    def device_encoding(self, fd):
-        """In PyPy3, os.device_encoding() is called when acquiring a lock"""
-        return None
-
-os_socket_mock = OsSocketMock()
-
-
-@contextmanager
-def patch_object(module, object_name, mock_object):
-    """Patch an object in a module and return original after block exits"""
-    original = getattr(module, object_name, 'DOES NOT EXIST')
-    setattr(module, object_name, mock_object)
-    try:
-        yield
-    finally:
-        if original == 'DOES NOT EXIST':
-            delattr(module, object_name)
-        else:
-            setattr(module, object_name, original)
-
-
-@contextmanager
-def patch_module(module_name, mock_object):
-    """Patch a module in sys.modules and zc.lockfile, and return the original"""
-    module = __import__(module_name)
-    sys.modules[module_name] = mock_object
-    with patch_object(zc.lockfile, module_name, mock_object):
-        try:
-            yield
-        finally:
-            sys.modules[module_name] = module
-
 
 def inc():
     while 1:
@@ -145,7 +106,7 @@ def hostname_in_lockfile():
     # hostname is correctly written into the lock file when it's included in the
     # lock file content template
     >>> import zc.lockfile
-    >>> with patch_module('socket', os_socket_mock):
+    >>> with patch('socket.gethostname', Mock(return_value='myhostname')):
     ...     lock = zc.lockfile.LockFile("f.lock", content_template='{hostname}')
     >>> f = open("f.lock")
     >>> _ = f.seek(1)
@@ -174,8 +135,8 @@ class LockFileContentFormatterTestCase(unittest.TestCase):
     """Tests for the LockFileContentFormatter string formatter class"""
     def test_lock_file_content_formatter(self):
         """{pid} and {hostname} become os.getpid() and socket.gethostname()"""
-        with patch_module('os', os_socket_mock):
-            with patch_module('socket', os_socket_mock):
+        with patch('os.getpid', Mock(return_value=123)):
+            with patch('socket.gethostname', Mock(return_value='myhostname')):
                 formatter = zc.lockfile.LockFileContentFormatter()
                 result = formatter.format('pid={pid} hostname={hostname}')
                 assert result == 'pid=123 hostname=myhostname', repr(result)
@@ -227,9 +188,9 @@ class LockFileLogEntryTestCase(unittest.TestCase):
             if lock is not None:
                 lock.close()
 
-        with patch_module('os', os_socket_mock):
-            with patch_module('socket', os_socket_mock):
-                with patch_object(zc.lockfile, 'logger', test_logger):
+        with patch('os.getpid', Mock(return_value=123)):
+            with patch('socket.gethostname', Mock(return_value='myhostname')):
+                with patch.object(zc.lockfile, 'logger', test_logger):
                     first_locked = threading.Event()
                     second_locked = threading.Event()
                     thread1 = threading.Thread(
