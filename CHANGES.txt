@@ -7,6 +7,10 @@ Change History
 - Code and ReST markup cosmetics.
   [alecghica]
 
+- disabled exception logger by default (can be enabled
+  using the ``log_exc`` constructor parameter
+  [ajung]
+
 1.1.0 (2013-02-12)
 ==================
 
