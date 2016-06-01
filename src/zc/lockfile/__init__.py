@@ -74,7 +74,7 @@ class LockFile:
 
     _fp = None
 
-    def __init__(self, path, content_template='{pid}'):
+    def __init__(self, path, content_template=' {pid}'):
         self._path = path
         try:
             # Try to open for writing without truncation:
@@ -89,10 +89,10 @@ class LockFile:
         try:
             _lock_file(fp)
         except:
-            fp.seek(1)
+            fp.seek(0)
             content = fp.read().strip()
             fp.close()
-            if content_template == '{pid}':
+            if content_template == ' {pid}':
                 # Original exception message format when using the default
                 # lock file template
                 pid = content[:20] if content else 'UNKNOWN'
@@ -106,8 +106,8 @@ class LockFile:
             raise
 
         self._fp = fp
-        fp.write(" %s\n" % content_template.format(pid=os.getpid(),
-                                                   hostname=LazyHostName()))
+        fp.write("%s\n" % content_template.format(pid=os.getpid(),
+                                                  hostname=LazyHostName()))
         fp.truncate()
         fp.flush()
 
