@@ -103,8 +103,9 @@ def pid_in_lockfile():
 
 def hostname_in_lockfile():
     r"""
-    # hostname is correctly written into the lock file when it's included in the
-    # lock file content template
+    hostname is correctly written into the lock file when it's included in the
+    lock file content template
+
     >>> import zc.lockfile
     >>> with patch('socket.gethostname', Mock(return_value='myhostname')):
     ...     lock = zc.lockfile.LockFile("f.lock", content_template='{hostname}')
