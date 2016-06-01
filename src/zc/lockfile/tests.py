@@ -150,7 +150,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         setupstack.rmtree(self.tmp)
 
     def test_log_entry(self):
-        """PID and hostname are parsed and logged from lock file on failure"""
+        # PID and hostname are parsed and logged from lock file on failure
         test_logger = TestLogger()
 
         def lock(locked, before_closing):
