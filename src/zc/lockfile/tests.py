@@ -196,6 +196,5 @@ def test_suite():
     # Add doctests from zc/lockfile/__init__.py
     suite.addTest(doctest.DocTestSuite(zc.lockfile))
     # Add unittest test cases from this module
-    suite.addTest(
-        unittest.TestLoader().loadTestsFromModule(sys.modules[__name__]))
+    suite.addTest(unittest.defaultTestLoader.loadTestsFromName(__name__))
     return suite
