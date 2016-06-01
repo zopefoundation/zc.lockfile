@@ -142,7 +142,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
     """Tests for logging in case of lock failure"""
     def setUp(self):
         self.here = os.getcwd()
-        self.tmp = tempfile.mkdtemp()
+        self.tmp = tempfile.mkdtemp(prefix='zc.lockfile-test-')
         os.chdir(self.tmp)
 
     def tearDown(self):
