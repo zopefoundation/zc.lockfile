@@ -110,7 +110,6 @@ def hostname_in_lockfile():
     >>> with patch('socket.gethostname', Mock(return_value='myhostname')):
     ...     lock = zc.lockfile.LockFile("f.lock", content_template='{hostname}')
     >>> f = open("f.lock")
-    >>> _ = f.seek(0)
     >>> f.read().strip()
     'myhostname'
     >>> f.close()
@@ -123,7 +122,6 @@ def hostname_in_lockfile():
     LockError: Couldn't lock 'f.lock'
 
     >>> f = open("f.lock")
-    >>> _ = f.seek(0)
     >>> f.read().strip()
     'myhostname'
     >>> f.close()
