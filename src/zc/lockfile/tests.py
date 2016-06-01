@@ -193,8 +193,6 @@ def test_suite():
     suite.addTest(doctest.DocTestSuite(
         setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown,
         checker=checker))
-    # Add doctests from zc/lockfile/__init__.py
-    suite.addTest(doctest.DocTestSuite(zc.lockfile))
     # Add unittest test cases from this module
     suite.addTest(unittest.defaultTestLoader.loadTestsFromName(__name__))
     return suite
