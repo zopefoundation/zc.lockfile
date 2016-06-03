@@ -14,7 +14,6 @@
 import os, re, sys, unittest, doctest
 import zc.lockfile, time, threading
 from zope.testing import renormalizing, setupstack
-from contextlib import contextmanager
 import tempfile
 try:
     from unittest.mock import Mock, patch
