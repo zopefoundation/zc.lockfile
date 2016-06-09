@@ -42,7 +42,7 @@ open('doc.txt', 'w').write(long_description)
 
 setup(
     name = 'zc.lockfile',
-    version=version
+    version=version,
     author = "Zope Foundation",
     author_email = "zope-dev@zope.org",
     description = "Basic inter-process locks",
