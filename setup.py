@@ -13,6 +13,10 @@
 ##############################################################################
 import os
 from setuptools import setup, find_packages
+import sys
+
+# Use unittest.mock in Python >= 3.3, or the mock package from PyPI on < 3.3
+CONDITIONAL_TEST_REQUIREMENTS = ['mock'] if sys.version_info < (3, 3) else []
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
@@ -48,7 +52,7 @@ setup(
     namespace_packages = ['zc'],
     install_requires = 'setuptools',
     extras_require=dict(
-        test=[
+        test=CONDITIONAL_TEST_REQUIREMENTS + [
             'zope.testing',
             ]),
     classifiers = [
@@ -70,7 +74,7 @@ setup(
         'Topic :: Software Development',
        ],
     test_suite="zc.lockfile.tests.test_suite",
-    tests_require=[
+    tests_require=CONDITIONAL_TEST_REQUIREMENTS + [
         'zope.testing'],
     include_package_data = True,
     zip_safe=False,

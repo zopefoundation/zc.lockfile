@@ -63,11 +63,18 @@ else:
         pass
 
 
+class LazyHostName(object):
+    """Avoid importing socket and calling gethostname() unnecessarily"""
+    def __str__(self):
+        import socket
+        return socket.gethostname()
+
+
 class LockFile:
 
     _fp = None
 
-    def __init__(self, path):
+    def __init__(self, path, content_template='{pid}'):
         self._path = path
         try:
             # Try to open for writing without truncation:
@@ -83,15 +90,24 @@ class LockFile:
             _lock_file(fp)
         except:
             fp.seek(1)
-            pid = fp.read().strip()[:20]
+            content = fp.read().strip()
             fp.close()
-            if not pid:
-                pid = 'UNKNOWN'
-            logger.exception("Error locking file %s; pid=%s", path, pid)
+            if content_template == '{pid}':
+                # Original exception message format when using the default
+                # lock file template
+                pid = content[:20] if content else 'UNKNOWN'
+                logger.exception("Error locking file %s; pid=%s", path, pid)
+            else:
+                # Include the first 40 characters of lock file contents for
+                # custom lock file templates
+                logger.exception('Error locking file %s; content: "%s%s"',
+                                 path, content[:40],
+                                 '...' if len(content) > 40 else '')
             raise
 
         self._fp = fp
-        fp.write(" %s\n" % os.getpid())
+        fp.write(" %s\n" % content_template.format(pid=os.getpid(),
+                                                   hostname=LazyHostName()))
         fp.truncate()
         fp.flush()
 
