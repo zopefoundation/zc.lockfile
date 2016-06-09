@@ -11,6 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
+
+version = '1.2.0'
+
 import os
 from setuptools import setup, find_packages
 import sys
@@ -39,9 +42,9 @@ open('doc.txt', 'w').write(long_description)
 
 setup(
     name = 'zc.lockfile',
-    version='1.1.1.dev0',
-    author = "Jim Fulton",
-    author_email = "jim@zope.com",
+    version=version
+    author = "Zope Foundation",
+    author_email = "zope-dev@zope.org",
     description = "Basic inter-process locks",
     long_description=long_description,
     license = "ZPL 2.1",

@@ -1,13 +1,13 @@
 Change History
 ***************
 
-1.1.1 (unreleased)
+1.2.0 (2016-06-09)
 ==================
+
+- Added the ability to include the hostname in the lock file content.
 
 - Code and ReST markup cosmetics.
   [alecghica]
-
-- Added the ability to include the hostname in the lock file content.
 
 1.1.0 (2013-02-12)
 ==================
