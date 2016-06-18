@@ -185,6 +185,22 @@ class LockFileLogEntryTestCase(unittest.TestCase):
                      'f.lock', '123/myhostname', '')]
         assert test_logger.log_entries == expected, test_logger.log_entries
 
+    def test_unlock_and_lock_while_multiprocessing_process_running(self):
+        import multiprocessing
+
+        lock = zc.lockfile.LockFile('l')
+        p = multiprocessing.Process(target=time.sleep, args=(1,))
+        p.daemon = True
+        p.start()
+
+        # release and re-acquire should work (obviously)
+        lock.close()
+        lock = zc.lockfile.LockFile('l')
+        self.assertTrue(p.is_alive())
+
+        lock.close()
+        p.join()
+
 
 def test_suite():
     suite = unittest.TestSuite()
