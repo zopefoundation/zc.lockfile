@@ -198,8 +198,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         lock.close()
         lock = zc.lockfile.LockFile('l')
         self.assertTrue(p.is_alive())
-        q.put(0)
 
+        q.put(0)
         lock.close()
         p.join()
 
