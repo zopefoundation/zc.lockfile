@@ -189,7 +189,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         import multiprocessing
 
         lock = zc.lockfile.LockFile('l')
-        p = multiprocessing.Process(target=time.sleep, args=(1,))
+        q = multiprocessing.Queue()
+        p = multiprocessing.Process(target=q.get)
         p.daemon = True
         p.start()
 
@@ -197,6 +198,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         lock.close()
         lock = zc.lockfile.LockFile('l')
         self.assertTrue(p.is_alive())
+        q.put(0)
 
         lock.close()
         p.join()
