@@ -1,6 +1,9 @@
 Change History
 ***************
 
+- Fixed: unlocking and locking didn't work when a multiprocessing
+  process was running (and presumably other conditions).
+
 1.2.0 (2016-06-09)
 ==================
 

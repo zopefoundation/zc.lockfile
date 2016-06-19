@@ -59,9 +59,7 @@ else:
             raise LockError("Couldn't lock %r" % file.name)
 
     def _unlock_file(file):
-        # File is automatically unlocked on close
-        pass
-
+        fcntl.flock(file.fileno(), fcntl.LOCK_UN)
 
 class LazyHostName(object):
     """Avoid importing socket and calling gethostname() unnecessarily"""
