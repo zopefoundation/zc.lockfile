@@ -84,7 +84,11 @@ class LockFile:
             # one will get the the lock and write a pid.
             fp = open(path, 'a+')
 
-        _lock_file(fp)
+        try:
+            _lock_file(fp)
+        except:
+            fp.close()
+            raise
 
         # We got the lock, record info in the file.
         self._fp = fp
