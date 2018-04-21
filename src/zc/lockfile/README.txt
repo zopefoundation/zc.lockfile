@@ -19,9 +19,10 @@ If we try to lock the same name, we'll get a lock error:
     ...     print("Can't lock file")
     Can't lock file
 
+.. We don't log failure to acquire.
+
     >>> for record in handler.records: # doctest: +ELLIPSIS
     ...     print(record.levelname+' '+record.getMessage())
-    ERROR Error locking file lock; pid=...
 
 To release the lock, use it's close method:
 
