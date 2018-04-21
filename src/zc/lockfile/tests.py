@@ -159,6 +159,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
                 with open('f.lock') as f:
                     self.assertEqual(' 123/myhostname\n', f.read())
 
+                lock.close()
+
     def test_unlock_and_lock_while_multiprocessing_process_running(self):
         import multiprocessing
 
