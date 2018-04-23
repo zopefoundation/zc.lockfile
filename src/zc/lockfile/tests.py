@@ -150,40 +150,16 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         os.chdir(self.here)
         setupstack.rmtree(self.tmp)
 
-    def test_log_entry(self):
+    def test_log_formatting(self):
         # PID and hostname are parsed and logged from lock file on failure
-        test_logger = TestLogger()
-
-        def lock(locked, before_closing):
-            lock = None
-            try:
-                lock = zc.lockfile.LockFile('f.lock',
-                                            content_template='{pid}/{hostname}')
-            except Exception:
-                pass
-            locked.set()
-            before_closing.wait()
-            if lock is not None:
-                lock.close()
-
         with patch('os.getpid', Mock(return_value=123)):
             with patch('socket.gethostname', Mock(return_value='myhostname')):
-                with patch.object(zc.lockfile, 'logger', test_logger):
-                    first_locked = threading.Event()
-                    second_locked = threading.Event()
-                    thread1 = threading.Thread(
-                        target=lock, args=(first_locked, second_locked))
-                    thread2 = threading.Thread(
-                        target=lock, args=(second_locked, second_locked))
-                    thread1.start()
-                    first_locked.wait()
-                    assert not test_logger.log_entries
-                    thread2.start()
-                    thread1.join()
-                    thread2.join()
-        expected = [('Error locking file %s; content: "%s%s"',
-                     'f.lock', '123/myhostname', '')]
-        assert test_logger.log_entries == expected, test_logger.log_entries
+                lock = zc.lockfile.LockFile('f.lock',
+                                            content_template='{pid}/{hostname}')
+                with open('f.lock') as f:
+                    self.assertEqual(' 123/myhostname\n', f.read())
+
+                lock.close()
 
     def test_unlock_and_lock_while_multiprocessing_process_running(self):
         import multiprocessing

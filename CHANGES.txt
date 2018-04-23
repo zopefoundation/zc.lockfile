@@ -4,6 +4,8 @@ Change History
 1.3.0 (unreleased)
 ==================
 
+- Stop logging failure to acquire locks. Clients can do that if they wish.
+
 - Claim support for Python 3.4 and 3.5.
 
 - Drop Python 3.2 support because pip no longer supports it.

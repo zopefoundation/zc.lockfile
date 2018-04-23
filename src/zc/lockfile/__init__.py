@@ -87,22 +87,10 @@ class LockFile:
         try:
             _lock_file(fp)
         except:
-            fp.seek(1)
-            content = fp.read().strip()
             fp.close()
-            if content_template == '{pid}':
-                # Original exception message format when using the default
-                # lock file template
-                pid = content[:20] if content else 'UNKNOWN'
-                logger.exception("Error locking file %s; pid=%s", path, pid)
-            else:
-                # Include the first 40 characters of lock file contents for
-                # custom lock file templates
-                logger.exception('Error locking file %s; content: "%s%s"',
-                                 path, content[:40],
-                                 '...' if len(content) > 40 else '')
             raise
 
+        # We got the lock, record info in the file.
         self._fp = fp
         fp.write(" %s\n" % content_template.format(pid=os.getpid(),
                                                    hostname=LazyHostName()))
