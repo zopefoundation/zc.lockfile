@@ -17,6 +17,8 @@ import errno
 import logging
 logger = logging.getLogger("zc.lockfile")
 
+__metaclass__ = type
+
 class LockError(Exception):
     """Couldn't get a lock
     """
@@ -61,14 +63,14 @@ else:
     def _unlock_file(file):
         fcntl.flock(file.fileno(), fcntl.LOCK_UN)
 
-class LazyHostName(object):
+class LazyHostName:
     """Avoid importing socket and calling gethostname() unnecessarily"""
     def __str__(self):
         import socket
         return socket.gethostname()
 
 
-class SimpleLockFile(object):
+class SimpleLockFile:
 
     _fp = None
 
