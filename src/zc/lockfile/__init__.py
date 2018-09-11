@@ -68,7 +68,7 @@ class LazyHostName(object):
         return socket.gethostname()
 
 
-class SimpleLockFile:
+class SimpleLockFile(object):
 
     _fp = None
 
@@ -112,7 +112,7 @@ class LockFile(SimpleLockFile):
 
     def __init__(self, path, content_template='{pid}'):
         self._content_template = content_template
-        SimpleLockFile.__init__(self, path)
+        super(LockFile, self).__init__(path)
 
     def _on_lock(self):
         content = self._content_template.format(
