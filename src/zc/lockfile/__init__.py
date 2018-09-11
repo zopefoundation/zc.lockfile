@@ -68,11 +68,11 @@ class LazyHostName(object):
         return socket.gethostname()
 
 
-class LockFile:
+class SimpleLockFile:
 
     _fp = None
 
-    def __init__(self, path, content_template='{pid}'):
+    def __init__(self, path):
         self._path = path
         try:
             # Try to open for writing without truncation:
@@ -86,15 +86,13 @@ class LockFile:
 
         try:
             _lock_file(fp)
+            self._fp = fp
         except:
             fp.close()
             raise
 
-        # We got the lock, record info in the file.
-        self._fp = fp
-        fp.write(" %s\n" % content_template.format(pid=os.getpid(),
-                                                   hostname=LazyHostName()))
-        fp.truncate()
+        # Lock acquired
+        self._on_lock()
         fp.flush()
 
     def close(self):
@@ -102,3 +100,24 @@ class LockFile:
             _unlock_file(self._fp)
             self._fp.close()
             self._fp = None
+
+    def _on_lock(self):
+        """
+        Allow subclasses to supply behavior to occur following
+        lock acquisition.
+        """
+
+
+class LockFile(SimpleLockFile):
+
+    def __init__(self, path, content_template='{pid}'):
+        self._content_template = content_template
+        SimpleLockFile.__init__(self, path)
+
+    def _on_lock(self):
+        content = self._content_template.format(
+            pid=os.getpid(),
+            hostname=LazyHostName(),
+        )
+        self._fp.write(" %s\n" % content)
+        self._fp.truncate()
