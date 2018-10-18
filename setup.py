@@ -38,8 +38,6 @@ long_description=(
         '**********************\n'
         )
 
-open('doc.txt', 'w').write(long_description)
-
 setup(
     name = 'zc.lockfile',
     version=version,
