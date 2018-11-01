@@ -1,10 +1,12 @@
 Change History
 ***************
 
-1.3.1 (unreleased)
-==================
+1.4 (unreleased)
+================
 
-- Nothing changed yet.
+- Claim support for Python 3.6 and 3.7.
+
+- Drop Python 2.6 and 3.3.
 
 
 1.3.0 (2018-04-23)
