@@ -1,6 +1,12 @@
 Change History
 ***************
 
+1.5 (unreleased)
+================
+
+- Nothing changed yet.
+
+
 1.4 (2018-11-12)
 ================
 
