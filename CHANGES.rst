@@ -1,7 +1,7 @@
 Change History
 ***************
 
-1.4 (unreleased)
+1.4 (2018-11-12)
 ================
 
 - Claim support for Python 3.6 and 3.7.
