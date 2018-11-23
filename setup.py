@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-version = '1.3.1.dev0'
+version = '1.5.dev0'
 
 import os
 from setuptools import setup, find_packages
@@ -25,20 +25,15 @@ def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 long_description=(
-        read('README.txt')
+        read('README.rst')
         + '\n' +
         'Detailed Documentation\n'
         '**********************\n'
         + '\n' +
         read('src', 'zc', 'lockfile', 'README.txt')
         + '\n' +
-        read('CHANGES.txt')
-        + '\n' +
-        'Download\n'
-        '**********************\n'
+        read('CHANGES.rst')
         )
-
-open('doc.txt', 'w').write(long_description)
 
 setup(
     name = 'zc.lockfile',
@@ -67,12 +62,12 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development',

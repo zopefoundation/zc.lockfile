@@ -1,8 +1,8 @@
 Change History
 ***************
 
-2.0.0 (unreleased)
-==================
+2.0 (unreleased)
+================
 
 - #15: Extracted new ``SimpleLockFile`` that removes implicit behavior
   writing to the lock file, and instead allows a subclass to define
@@ -11,6 +11,14 @@ Change History
 - ``SimpleLockFile`` and thus ``LockFile`` are now new-style classes.
   Any clients relying on ``LockFile`` being an old-style class will
   need to be adapted.
+
+1.4 (2018-11-12)
+================
+
+- Claim support for Python 3.6 and 3.7.
+
+- Drop Python 2.6 and 3.3.
+
 
 1.3.0 (2018-04-23)
 ==================
