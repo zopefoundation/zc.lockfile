@@ -182,12 +182,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
     def test_simple_lock(self):
         assert isinstance(zc.lockfile.SimpleLockFile, type)
         lock = zc.lockfile.SimpleLockFile('s')
-        try:
+        with self.assertRaises(zc.lockfile.LockError):
             zc.lockfile.SimpleLockFile('s')
-        except zc.lockfile.LockError:
-            pass
-        else:
-            raise Exception("LockError not raised")
         lock.close()
         zc.lockfile.SimpleLockFile('s').close()
 
