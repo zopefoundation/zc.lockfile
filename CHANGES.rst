@@ -4,7 +4,9 @@ Change History
 1.5 (unreleased)
 ================
 
-- Nothing changed yet.
+- Fix issue with missing ``__init__.py`` by requiring a ``setuptools`` version
+  which supports PEP 420.
+  (`#13 <https://github.com/zopefoundation/zc.lockfile/issues/13>`_)
 
 
 1.4 (2018-11-12)
