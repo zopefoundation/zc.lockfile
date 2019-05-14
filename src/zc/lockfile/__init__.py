@@ -15,6 +15,7 @@
 import os
 import errno
 import logging
+import time
 logger = logging.getLogger("zc.lockfile")
 
 class LockError(Exception):
@@ -102,3 +103,37 @@ class LockFile:
             _unlock_file(self._fp)
             self._fp.close()
             self._fp = None
+            
+class LockedFile(object):
+    __slots__ = ("name", "mode", "args", "kwargs", "lock", "file", "timeout")
+
+    def __init__(self, name, mode, *args, timeout=None, **kwargs):
+        self.name = str(name)
+        self.mode = mode
+        self.args = args
+        self.kwargs = kwargs
+        self.lock = None
+        self.file = None
+        self.timeout = timeout
+
+    def __enter__(self):
+        lockname = self.name + ".lock"
+        tick = 0.01
+        if self.timeout is None:
+            iterations = float("inf")
+        else:
+            iterations = self.timeout // tick
+        while iterations:
+            try:
+                self.lock = LockFile(lockname, *self.args, **self.kwargs)
+                self.file = open(self.name, self.mode)
+                return self.file
+            except LockError:
+                logger.debug("Couldn't get lock - waiting...")
+                time.sleep(tick)
+                iterations -= 1
+        raise LockError("Could not get lock before timeout expired")
+
+    def __exit__(self, *args):
+        self.lock.close()
+        return self.file.__exit__(*args)
