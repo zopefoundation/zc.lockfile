@@ -146,7 +146,7 @@ class LockedFile(LockedContext):
     """ContextManager version of LockFile, which opens an associated file"""
 
     def __init__(self, name, mode, content_template='{pid}', timeout=None):
-        super(self, LockedFile).__init__(
+        super(LockedFile, self).__init__(
             name,
             content_template=content_template,
             timeout=timeout
@@ -162,4 +162,4 @@ class LockedFile(LockedContext):
         try:
             return self.file.__exit__(*args)
         finally:
-            super(self, LockedFile).__exit__(*args)
+            super(LockedFile, self).__exit__(*args)

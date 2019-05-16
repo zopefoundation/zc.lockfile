@@ -226,7 +226,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
 
         with patch('zc.lockfile.LockFile.close', this_counter):
             try:
-                with zc.lockfile.LockedFile('m', 'r') as f:
+                with zc.lockfile.LockedFile('m', 'w') as f:
                     f.write("Test")
                     raise Exception("this is a test")
             except Exception as e:
@@ -235,7 +235,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
             self.assertEqual(counter.count, 1)
             counter.count = 0
             with open('m', 'r') as f:
-                assertEqual(f.read(), "Test")
+                self.assertEqual(f.read(), "Test")
 
 
 def test_suite():
