@@ -142,7 +142,7 @@ class LockedContext(object):
 class LockedFile(LockedContext):
     """ContextManager version of LockFile, which opens an associated file"""
 
-    def __init__(self, name, mode, content_template='{pid}', timeout=None):
+    def __init__(self, name, mode, content_template='{pid}', timeout=float("inf")):
         super(LockedFile, self).__init__(
             name,
             content_template=content_template,
