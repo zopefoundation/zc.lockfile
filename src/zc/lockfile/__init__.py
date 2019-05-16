@@ -108,8 +108,8 @@ class LockFile:
 class LockedContext(object):
     """ContextManager version of LockFile"""
 
-    def __init__(self, name, content_template='{pid}', timeout=None):
-        self.name = str(name)
+    def __init__(self, name, content_template='{pid}', timeout=float("inf")):
+        self.name = str(name)  # wrap in str() to allow pathlib usage
         self.content_template = content_template
         self.lock = None
         self.timeout = timeout
@@ -117,10 +117,7 @@ class LockedContext(object):
     def __enter__(self):
         lockname = self.name + ".lock"
         tick = 0.1
-        if self.timeout is None:
-            iterations = float("inf")
-        else:
-            iterations = self.timeout // tick + 1
+        iterations = self.timeout // tick + 1
         while iterations:
             try:
                 self.lock = LockFile(lockname, self.content_template)
@@ -132,7 +129,7 @@ class LockedContext(object):
         raise LockError("Could not get lock before timeout expired")
 
     def _post_lock_operation(self):
-        """Stub method for subclasses to extend if they want to ian action after
+        """Stub method for subclasses to extend if they want an action after
         getting the lock"""
         return self
 
@@ -155,11 +152,12 @@ class LockedFile(LockedContext):
         self.file = None
 
     def _post_lock_operation(self):
+        """Overrides the default operation to open a file, then return the file"""
         self.file = open(self.name, self.mode)
         return self.file
 
     def __exit__(self, *args):
         try:
-            return self.file.__exit__(*args)
+            return self.file.__exit__(*args)  # close the file
         finally:
-            super(LockedFile, self).__exit__(*args)
+            super(LockedFile, self).__exit__(*args)  # close the lock

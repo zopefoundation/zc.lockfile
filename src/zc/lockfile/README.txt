@@ -68,3 +68,22 @@ If you now inspected the lock file, you would see e.g.:
     $ cat lock
      123;myhostname
 
+Context Managers
+================
+
+This module also implements two Context Managers, in addition to the primitives
+discussed above. The first just gets and releases a lock file, with a timeout.
+
+    >>> with zc.lockfile.LockedContext('description', timeout=rough_seconds):
+    ...    do_something()
+
+The lock will always be released when you exit this scope. If timeout is not
+given, it is assumed you wish to wait forever. It should be noted that this
+Context Manager will always add '.lock' to the end of any filename you give it.
+This is to allow for compatibility with its subclass:
+
+    >>> with zc.lockfile.LockedFile('filename.ext', 'r') as f:
+    ...    do_something()
+
+This Context Manager associates a file with a lock. It supports all file modes
+and operations, in addition to the lock templates and timeouts supported above.
