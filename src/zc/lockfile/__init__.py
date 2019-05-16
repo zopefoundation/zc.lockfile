@@ -103,37 +103,63 @@ class LockFile:
             _unlock_file(self._fp)
             self._fp.close()
             self._fp = None
-            
-class LockedFile(object):
-    __slots__ = ("name", "mode", "args", "kwargs", "lock", "file", "timeout")
 
-    def __init__(self, name, mode, *args, timeout=None, **kwargs):
+
+class LockedContext(object):
+    """ContextManager version of LockFile"""
+
+    def __init__(self, name, content_template='{pid}', timeout=None):
         self.name = str(name)
-        self.mode = mode
-        self.args = args
-        self.kwargs = kwargs
+        self.content_template = content_template
         self.lock = None
-        self.file = None
         self.timeout = timeout
 
     def __enter__(self):
         lockname = self.name + ".lock"
-        tick = 0.01
+        tick = 0.1
         if self.timeout is None:
             iterations = float("inf")
         else:
-            iterations = self.timeout // tick
+            iterations = self.timeout // tick + 1
         while iterations:
             try:
-                self.lock = LockFile(lockname, *self.args, **self.kwargs)
-                self.file = open(self.name, self.mode)
-                return self.file
+                self.lock = LockFile(lockname, self.content_template)
+                return self._post_lock_operation()
             except LockError:
                 logger.debug("Couldn't get lock - waiting...")
                 time.sleep(tick)
                 iterations -= 1
         raise LockError("Could not get lock before timeout expired")
 
+    def _post_lock_operation(self):
+        """Stub method for subclasses to extend if they want to ian action after
+        getting the lock"""
+        return self
+
     def __exit__(self, *args):
+        """Default __exit__(). When extending, make sure to include this in a
+        finally block"""
         self.lock.close()
-        return self.file.__exit__(*args)
+
+
+class LockedFile(LockedContext):
+    """ContextManager version of LockFile, which opens an associated file"""
+
+    def __init__(self, name, mode, content_template='{pid}', timeout=None):
+        super(self, LockedFile).__init__(
+            name,
+            content_template=content_template,
+            timeout=timeout
+        )
+        self.mode = mode
+        self.file = None
+
+    def _post_lock_operation(self):
+        self.file = open(self.name, self.mode)
+        return self.file
+
+    def __exit__(self, *args):
+        try:
+            return self.file.__exit__(*args)
+        finally:
+            super(self, LockedFile).__exit__(*args)

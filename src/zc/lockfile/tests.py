@@ -26,6 +26,12 @@ checker = renormalizing.RENormalizing([
      r"LockError:"),
     ])
 
+def counter(*args, **kwargs):
+    counter.count += 1
+    return counter.count
+
+counter.count = 0
+
 def inc():
     while 1:
         try:
@@ -178,6 +184,58 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         q.put(0)
         lock.close()
         p.join()
+
+    def test_LockedContext_timeout_math(self):
+        with patch('time.sleep', counter):
+            lock = zc.lockfile.LockFile('k.lock')
+            for value in range(4):
+                excepted = False
+                try:
+                    with zc.lockfile.LockedContext('k', timeout=value):
+                        raise Exception("Should not be able to acquire")
+                except zc.lockfile.LockError:
+                    excepted = True
+                self.assertTrue(excepted)
+                self.assertEqual(counter.count, value // 0.1 + 1)
+                counter.count = 0
+            lock.close()
+
+    def test_LockedContext_close_on_exception(self):
+        orig = zc.lockfile.LockFile.close
+
+        def this_counter(*args, **kwargs):
+            counter()
+            return orig(*args, **kwargs)
+
+        with patch('zc.lockfile.LockFile.close', this_counter):
+            try:
+                with zc.lockfile.LockedContext('m'):
+                    raise Exception("this is a test")
+            except Exception as e:
+                if e.args != ("this is a test", ):
+                    raise e
+            self.assertEqual(counter.count, 1)
+            counter.count = 0
+
+    def test_LockedFile_flush_on_exception(self):
+        orig = zc.lockfile.LockFile.close
+
+        def this_counter(*args, **kwargs):
+            counter()
+            return orig(*args, **kwargs)
+
+        with patch('zc.lockfile.LockFile.close', this_counter):
+            try:
+                with zc.lockfile.LockedFile('m', 'r') as f:
+                    f.write("Test")
+                    raise Exception("this is a test")
+            except Exception as e:
+                if e.args != ("this is a test", ):
+                    raise e
+            self.assertEqual(counter.count, 1)
+            counter.count = 0
+            with open('m', 'r') as f:
+                assertEqual(f.read(), "Test")
 
 
 def test_suite():
