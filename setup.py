@@ -44,7 +44,7 @@ setup(
     long_description=long_description,
     license = "ZPL 2.1",
     keywords = "lock",
-    url='http://www.python.org/pypi/zc.lockfile',
+    url='https://github.com/zopefoundation/zc.lockfile',
     packages = find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages = ['zc'],
