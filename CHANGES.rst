@@ -4,13 +4,15 @@ Change History
 2.0 (unreleased)
 ================
 
-- #15: Extracted new ``SimpleLockFile`` that removes implicit behavior
+- Extracted new ``SimpleLockFile`` that removes implicit behavior
   writing to the lock file, and instead allows a subclass to define
   that behavior.
+  (`#15 <https://github.com/zopefoundation/zc.lockfile/issues/15>`_)
 
 - ``SimpleLockFile`` and thus ``LockFile`` are now new-style classes.
   Any clients relying on ``LockFile`` being an old-style class will
   need to be adapted.
+
 
 1.4 (2018-11-12)
 ================
