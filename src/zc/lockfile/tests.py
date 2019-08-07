@@ -179,6 +179,14 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         lock.close()
         p.join()
 
+    def test_simple_lock(self):
+        assert isinstance(zc.lockfile.SimpleLockFile, type)
+        lock = zc.lockfile.SimpleLockFile('s')
+        with self.assertRaises(zc.lockfile.LockError):
+            zc.lockfile.SimpleLockFile('s')
+        lock.close()
+        zc.lockfile.SimpleLockFile('s').close()
+
 
 def test_suite():
     suite = unittest.TestSuite()
