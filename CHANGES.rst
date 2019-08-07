@@ -13,6 +13,10 @@ Change History
   Any clients relying on ``LockFile`` being an old-style class will
   need to be adapted.
 
+- Drop support for Python 3.4.
+
+- Add support for Python 3.8b3.
+
 
 1.4 (2018-11-12)
 ================
