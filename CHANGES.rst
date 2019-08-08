@@ -1,7 +1,7 @@
 Change History
 ***************
 
-2.0 (unreleased)
+2.0 (2019-08-08)
 ================
 
 - Extracted new ``SimpleLockFile`` that removes implicit behavior
