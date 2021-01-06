@@ -48,7 +48,6 @@ setup(
     packages = find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages = ['zc'],
-    install_requires = 'setuptools',
     extras_require=dict(
         test=CONDITIONAL_TEST_REQUIREMENTS + [
             'zope.testing',
