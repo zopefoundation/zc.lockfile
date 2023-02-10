@@ -19,7 +19,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '2.1.dev0'
+version = '3.0.dev0'
 
 
 # Use unittest.mock in Python >= 3.3, or the mock package from PyPI on < 3.3
