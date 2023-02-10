@@ -11,17 +11,19 @@
 # FOR A PARTICULAR PURPOSE
 #
 ##############################################################################
-
-import os
-import errno
 import logging
+import os
+
+
 logger = logging.getLogger("zc.lockfile")
 
 __metaclass__ = type
 
+
 class LockError(Exception):
     """Couldn't get a lock
     """
+
 
 try:
     import fcntl
@@ -31,6 +33,7 @@ except ImportError:
     except ImportError:
         def _lock_file(file):
             raise TypeError('No file-locking support on this platform')
+
         def _unlock_file(file):
             raise TypeError('No file-locking support on this platform')
 
@@ -63,8 +66,10 @@ else:
     def _unlock_file(file):
         fcntl.flock(file.fileno(), fcntl.LOCK_UN)
 
+
 class LazyHostName:
     """Avoid importing socket and calling gethostname() unnecessarily"""
+
     def __str__(self):
         import socket
         return socket.gethostname()
@@ -89,7 +94,7 @@ class SimpleLockFile:
         try:
             _lock_file(fp)
             self._fp = fp
-        except:
+        except BaseException:
             fp.close()
             raise
 

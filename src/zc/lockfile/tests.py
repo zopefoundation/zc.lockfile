@@ -11,23 +11,36 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-import os, re, sys, unittest, doctest
-import zc.lockfile, time, threading
-from zope.testing import renormalizing, setupstack
+import doctest
+import os
+import re
 import tempfile
+import threading
+import time
+import unittest
+
+from zope.testing import renormalizing
+from zope.testing import setupstack
+
+import zc.lockfile
+
+
 try:
-    from unittest.mock import Mock, patch
+    from unittest.mock import Mock
+    from unittest.mock import patch
 except ImportError:
-    from mock import Mock, patch
+    from mock import Mock
+    from mock import patch
 
 checker = renormalizing.RENormalizing([
     # Python 3 adds module path to error class name.
-    (re.compile("zc\.lockfile\.LockError:"),
+    (re.compile("zc\\.lockfile\\.LockError:"),
      r"LockError:"),
-    ])
+])
+
 
 def inc():
-    while 1:
+    while True:
         try:
             lock = zc.lockfile.LockFile('f.lock')
         except zc.lockfile.LockError:
@@ -42,6 +55,7 @@ def inc():
     f.write(('%d\n' % v).encode('ASCII'))
     f.close()
     lock.close()
+
 
 def many_threads_read_and_write():
     r"""
@@ -71,6 +85,7 @@ def many_threads_read_and_write():
     >>> os.remove('f.lock')
 
     """
+
 
 def pid_in_lockfile():
     r"""
@@ -107,7 +122,8 @@ def hostname_in_lockfile():
 
     >>> import zc.lockfile
     >>> with patch('socket.gethostname', Mock(return_value='myhostname')):
-    ...     lock = zc.lockfile.LockFile("f.lock", content_template='{hostname}')
+    ...     lock = zc.lockfile.LockFile(
+    ...         "f.lock", content_template='{hostname}')
     >>> f = open("f.lock")
     >>> _ = f.seek(1)
     >>> f.read().rstrip()
@@ -141,6 +157,7 @@ class TestLogger(object):
 
 class LockFileLogEntryTestCase(unittest.TestCase):
     """Tests for logging in case of lock failure"""
+
     def setUp(self):
         self.here = os.getcwd()
         self.tmp = tempfile.mkdtemp(prefix='zc.lockfile-test-')
@@ -154,8 +171,8 @@ class LockFileLogEntryTestCase(unittest.TestCase):
         # PID and hostname are parsed and logged from lock file on failure
         with patch('os.getpid', Mock(return_value=123)):
             with patch('socket.gethostname', Mock(return_value='myhostname')):
-                lock = zc.lockfile.LockFile('f.lock',
-                                            content_template='{pid}/{hostname}')
+                lock = zc.lockfile.LockFile(
+                    'f.lock', content_template='{pid}/{hostname}')
                 with open('f.lock') as f:
                     self.assertEqual(' 123/myhostname\n', f.read())
 
