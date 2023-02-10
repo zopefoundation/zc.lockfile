@@ -8,6 +8,8 @@ Change History
 
 - Drop support for Python 2.7, 3.5, 3.6.
 
+- Drop support for deprecated ``python setup.py test``.
+
 
 2.0 (2019-08-08)
 ================

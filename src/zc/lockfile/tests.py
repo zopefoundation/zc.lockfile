@@ -13,30 +13,16 @@
 ##############################################################################
 import doctest
 import os
-import re
 import tempfile
 import threading
 import time
 import unittest
+from unittest.mock import Mock
+from unittest.mock import patch
 
-from zope.testing import renormalizing
 from zope.testing import setupstack
 
 import zc.lockfile
-
-
-try:
-    from unittest.mock import Mock
-    from unittest.mock import patch
-except ImportError:
-    from mock import Mock
-    from mock import patch
-
-checker = renormalizing.RENormalizing([
-    # Python 3 adds module path to error class name.
-    (re.compile("zc\\.lockfile\\.LockError:"),
-     r"LockError:"),
-])
 
 
 def inc():
@@ -103,7 +89,7 @@ def pid_in_lockfile():
     >>> lock = zc.lockfile.LockFile("f.lock")
     Traceback (most recent call last):
       ...
-    LockError: Couldn't lock 'f.lock'
+    zc.lockfile.LockError: Couldn't lock 'f.lock'
 
     >>> f = open("f.lock")
     >>> _ = f.seek(1)
@@ -135,7 +121,7 @@ def hostname_in_lockfile():
     >>> lock = zc.lockfile.LockFile("f.lock", content_template='{hostname}')
     Traceback (most recent call last):
       ...
-    LockError: Couldn't lock 'f.lock'
+    zc.lockfile.LockError: Couldn't lock 'f.lock'
 
     >>> f = open("f.lock")
     >>> _ = f.seek(1)
@@ -147,7 +133,7 @@ def hostname_in_lockfile():
     """
 
 
-class TestLogger(object):
+class TestLogger:
     def __init__(self):
         self.log_entries = []
 
@@ -208,11 +194,10 @@ class LockFileLogEntryTestCase(unittest.TestCase):
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocFileSuite(
-        'README.txt', checker=checker,
+        'README.txt',
         setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
     suite.addTest(doctest.DocTestSuite(
-        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown,
-        checker=checker))
+        setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
     # Add unittest test cases from this module
     suite.addTest(unittest.defaultTestLoader.loadTestsFromName(__name__))
     return suite

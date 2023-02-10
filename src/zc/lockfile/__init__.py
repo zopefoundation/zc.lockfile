@@ -17,8 +17,6 @@ import os
 
 logger = logging.getLogger("zc.lockfile")
 
-__metaclass__ = type
-
 
 class LockError(Exception):
     """Couldn't get a lock
@@ -43,14 +41,14 @@ except ImportError:
             # Lock just the first byte
             try:
                 msvcrt.locking(file.fileno(), msvcrt.LK_NBLCK, 1)
-            except IOError:
+            except OSError:
                 raise LockError("Couldn't lock %r" % file.name)
 
         def _unlock_file(file):
             try:
                 file.seek(0)
                 msvcrt.locking(file.fileno(), msvcrt.LK_UNLCK, 1)
-            except IOError:
+            except OSError:
                 raise LockError("Couldn't unlock %r" % file.name)
 
 else:
@@ -60,7 +58,7 @@ else:
     def _lock_file(file):
         try:
             fcntl.flock(file.fileno(), _flags)
-        except IOError:
+        except OSError:
             raise LockError("Couldn't lock %r" % file.name)
 
     def _unlock_file(file):
@@ -84,7 +82,7 @@ class SimpleLockFile:
         try:
             # Try to open for writing without truncation:
             fp = open(path, 'r+')
-        except IOError:
+        except OSError:
             # If the file doesn't exist, we'll get an IO error, try a+
             # Note that there may be a race here. Multiple processes
             # could fail on the r+ open and open the file a+, but only
@@ -119,7 +117,7 @@ class LockFile(SimpleLockFile):
 
     def __init__(self, path, content_template='{pid}'):
         self._content_template = content_template
-        super(LockFile, self).__init__(path)
+        super().__init__(path)
 
     def _on_lock(self):
         content = self._content_template.format(

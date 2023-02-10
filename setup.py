@@ -13,17 +13,12 @@
 ##############################################################################
 
 import os
-import sys
 
 from setuptools import find_packages
 from setuptools import setup
 
 
 version = '3.0.dev0'
-
-
-# Use unittest.mock in Python >= 3.3, or the mock package from PyPI on < 3.3
-CONDITIONAL_TEST_REQUIREMENTS = ['mock'] if sys.version_info < (3, 3) else []
 
 
 def read(*rnames):
@@ -45,7 +40,7 @@ setup(
     name='zc.lockfile',
     version=version,
     author="Zope Foundation",
-    author_email="zope-dev@zope.org",
+    author_email="zope-dev@zope.dev",
     description="Basic inter-process locks",
     long_description=long_description,
     license="ZPL 2.1",
@@ -56,7 +51,7 @@ setup(
     namespace_packages=['zc'],
     install_requires='setuptools',
     extras_require=dict(
-        test=CONDITIONAL_TEST_REQUIREMENTS + [
+        test=[
             'zope.testing',
         ]),
     classifiers=[
@@ -77,9 +72,6 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development',
     ],
-    test_suite="zc.lockfile.tests.test_suite",
-    tests_require=CONDITIONAL_TEST_REQUIREMENTS + [
-        'zope.testing'],
     include_package_data=True,
     zip_safe=False,
 )
