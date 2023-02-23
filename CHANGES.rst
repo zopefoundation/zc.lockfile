@@ -1,10 +1,14 @@
 Change History
 ***************
 
-2.1 (unreleased)
+3.0 (unreleased)
 ================
 
-- Nothing changed yet.
+- Add support for Python 3.9, 3.10, 3.11.
+
+- Drop support for Python 2.7, 3.5, 3.6.
+
+- Drop support for deprecated ``python setup.py test``.
 
 
 2.0 (2019-08-08)
