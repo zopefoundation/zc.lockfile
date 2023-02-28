@@ -1,8 +1,8 @@
 Change History
 ***************
 
-3.1 (unreleased)
-================
+3.0.post1 (2023-02-28)
+======================
 
 - Add ``python_requires`` to ``setup.py`` to prevent installing on not
   supported old Python versions.

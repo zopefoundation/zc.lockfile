@@ -18,7 +18,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '3.1.dev0'
+version = '3.0.post1'
 
 
 def read(*rnames):
