@@ -1,6 +1,12 @@
 Change History
 ***************
 
+3.1 (unreleased)
+================
+
+- Nothing changed yet.
+
+
 3.0.post1 (2023-02-28)
 ======================
 
