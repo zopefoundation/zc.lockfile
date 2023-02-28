@@ -4,7 +4,8 @@ Change History
 3.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Add ``python_requires`` to ``setup.py`` to prevent installing on not
+  supported old Python versions.
 
 
 3.0 (2023-02-23)

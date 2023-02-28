@@ -49,6 +49,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     namespace_packages=['zc'],
+    python_requires='>=3.7',
     install_requires='setuptools',
     extras_require=dict(
         test=[
