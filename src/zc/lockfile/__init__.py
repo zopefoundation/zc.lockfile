@@ -25,10 +25,10 @@ class LockError(Exception):
 
 try:
     import fcntl
-except ImportError:
+except ModuleNotFoundError:
     try:
         import msvcrt
-    except ImportError:
+    except ModuleNotFoundError:
         def _lock_file(file):
             raise TypeError('No file-locking support on this platform')
 
