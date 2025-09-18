@@ -14,11 +14,10 @@
 
 import os
 
-from setuptools import find_packages
 from setuptools import setup
 
 
-version = '3.1.dev0'
+version = '4.0.dev0'
 
 
 def read(*rnames):
@@ -46,9 +45,6 @@ setup(
     license="ZPL-2.1",
     keywords="lock",
     url='https://github.com/zopefoundation/zc.lockfile',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    namespace_packages=['zc'],
     python_requires='>=3.9',
     install_requires='setuptools',
     extras_require=dict(
