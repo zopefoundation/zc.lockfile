@@ -46,7 +46,6 @@ setup(
     keywords="lock",
     url='https://github.com/zopefoundation/zc.lockfile',
     python_requires='>=3.9',
-    install_requires='setuptools',
     extras_require=dict(
         test=[
             'zope.testing',
