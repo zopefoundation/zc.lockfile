@@ -4,6 +4,8 @@ Change History
 4.1 (unreleased)
 ================
 
+- Drop support for Python 3.10, 3.9.
+
 - Remove no longer necessary ``setuptools`` runtime dependency.
 
 
