@@ -11,63 +11,8 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-
-import os
-
 from setuptools import setup
 
 
-version = '4.1.dev0'
-
-
-def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-
-
-long_description = (
-    read('README.rst')
-    + '\n' +
-    'Detailed Documentation\n'
-    '**********************\n'
-    + '\n' +
-    read('src', 'zc', 'lockfile', 'README.txt')
-    + '\n' +
-    read('CHANGES.rst')
-)
-
-setup(
-    name='zc.lockfile',
-    version=version,
-    author="Zope Foundation",
-    author_email="zope-dev@zope.dev",
-    description="Basic inter-process locks",
-    long_description=long_description,
-    license="ZPL-2.1",
-    keywords="lock",
-    url='https://github.com/zopefoundation/zc.lockfile',
-    python_requires='>=3.11',
-    extras_require=dict(
-        test=[
-            'zope.testing',
-        ]),
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: Zope Public License',
-        'Natural Language :: English',
-        'Operating System :: POSIX',
-        'Operating System :: Microsoft :: Windows',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
-        'Programming Language :: Python :: 3.14',
-        'Programming Language :: Python :: 3.15',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
-        'Topic :: Software Development',
-    ],
-    include_package_data=True,
-    zip_safe=False,
-)
+# See pyproject.toml for package metadata
+setup()

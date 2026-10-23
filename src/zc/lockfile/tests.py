@@ -186,7 +186,7 @@ class LockFileLogEntryTestCase(unittest.TestCase):
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(doctest.DocFileSuite(
-        'README.txt',
+        'README.rst',
         setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
     suite.addTest(doctest.DocTestSuite(
         setUp=setupstack.setUpDirectory, tearDown=setupstack.tearDown))
