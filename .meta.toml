@@ -23,5 +23,5 @@ fail-under = 100
 
 [manifest]
 additional-rules = [
-    "recursive-include src *.txt",
+    "recursive-include src *.rst",
     ]

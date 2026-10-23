@@ -7,6 +7,44 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+
+[project]
+name = "zc.lockfile"
+version = "4.1.dev0"
+description = "Basic inter-process locks"
+license = "ZPL-2.1"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Software Development",
+]
+dynamic = ["readme"]
+requires-python = ">=3.11"
+authors = [
+    {name = "Zope Foundation",email = "zope-dev@zope.dev"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+keywords = ["lock"]
+
+[project.urls]
+Source = "https://github.com/zopefoundation/zc.lockfile"
+Issues = "https://github.com/zopefoundation/zc.lockfile/issues"
+Changelog = "https://raw.githubusercontent.com/zopefoundation/zc.lockfile/master/CHANGES.rst"
+
 [tool.coverage.run]
 branch = true
 source = ["zc.lockfile"]
@@ -29,3 +67,6 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "parts/htmlcov"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "src/zc/lockfile/README.rst", "CHANGES.rst"]}
