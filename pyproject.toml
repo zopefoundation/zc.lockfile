@@ -7,7 +7,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-
 [project]
 name = "zc.lockfile"
 version = "4.1.dev0"
@@ -40,6 +39,9 @@ maintainers = [
 ]
 keywords = ["lock"]
 
+[project.optional-dependencies]
+test = ["zope.testing"]
+
 [project.urls]
 Source = "https://github.com/zopefoundation/zc.lockfile"
 Issues = "https://github.com/zopefoundation/zc.lockfile/issues"
@@ -70,3 +72,8 @@ directory = "parts/htmlcov"
 
 [tool.setuptools.dynamic]
 readme = {file = ["README.rst", "src/zc/lockfile/README.rst", "CHANGES.rst"]}
+
+[tool.zest-releaser]
+create-wheel = false
+extra-message = ""
+upload-pypi = false
