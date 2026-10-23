@@ -67,4 +67,3 @@ If you now inspected the lock file, you would see e.g.:
 
     $ cat lock
      123;myhostname
-
