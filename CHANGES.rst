@@ -1,7 +1,7 @@
 Change History
 ***************
 
-4.1 (unreleased)
+4.1 (2026-11-05)
 ================
 
 - Move package metadata from setup.py to pyproject.toml.
